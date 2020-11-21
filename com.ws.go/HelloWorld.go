@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"strconv"
+	"strings"
+	"sync"
 	"time"
 )
 
@@ -40,7 +43,82 @@ func main() {
 	//go concurrent("HelloWorld")
 	//go concurrent("HelloWorld2")
 	//time.Sleep(time.Second * 5)
-	channelTest()
+	//channelTest()
+	// defer修饰的函数: 在函数结束的时候自动调用! 在此处会在lock()结束后运行
+	//defer func() {
+	//	fmt.Println("处理异常开始")
+	//	for err := recover(); err != nil; {
+	//		fmt.Println(err)
+	//	}
+	//	fmt.Println("处理异常结束")
+	//}()
+	//lock()
+	stringTest()
+}
+
+// 字符串常用
+func stringTest() {
+	var str string = "你好"
+	for s := range str {
+		// 这样打印的出来中文是乱码
+		fmt.Println(string(s))
+	}
+
+	// 正确打印中文字符串
+	runes := []rune(str)
+	for i := 0; i < len(runes); i++ {
+		fmt.Println(string(runes[i]))
+	}
+
+	str = "Hello-World"
+	contains := strings.Contains(str, "He")
+	fmt.Println(contains)
+	// 切割
+	split := strings.Split(str, "-")
+	fmt.Println(split)
+	// 合并字符串数据,指定分隔符合并
+	join := strings.Join(split, "*")
+	fmt.Println(join)
+	// 比较字符串(不分大小写)
+	fold := strings.EqualFold("Hello", "hello")
+	fmt.Println(fold) // true
+	// 统计子串出现了多少次
+	count := strings.Count("Hellolllo", "l")
+	fmt.Println(count)
+	// 指定替换某个元素,替换数量为1
+	replace := strings.Replace("Hello", "l", "F", 1)
+	fmt.Println(replace)
+	// 转为小写
+	lower := strings.ToLower("Hello")
+	fmt.Println(lower)
+
+	// 数字转字符串,指定进制
+	formatInt := strconv.FormatInt(4444444, 10)
+	fmt.Println(reflect.TypeOf(formatInt))
+	fmt.Println(formatInt)
+
+	// 字符串转数字
+	parseInt, _ := strconv.ParseInt("1", 10, 64)
+	fmt.Println(parseInt)
+	fmt.Println(reflect.TypeOf(parseInt))
+}
+
+// 锁 -> 互拆锁和读写锁
+func lock() {
+	// 创建一个锁对象
+	var x int = 0
+	var y int = 10
+	var mutex sync.Mutex
+	for i := 0; i < 10000; i++ {
+		go func() {
+			mutex.Lock()
+			x = x / y
+			y++
+			mutex.Unlock()
+		}()
+	}
+	time.Sleep(time.Second)
+	fmt.Println(x)
 }
 
 // 通道使用
@@ -354,16 +432,4 @@ func swapReference(i *int, s *int) {
 	*i = *s
 	*s = temp
 
-}
-
-func helloWold(a, b int) int {
-	if a > b {
-		return a
-	} else {
-		return b
-	}
-}
-
-func helloWold2() (int, int, string) {
-	return 1, 5, "塞你母"
 }
