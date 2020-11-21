@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -53,7 +54,14 @@ func main() {
 	//	fmt.Println("处理异常结束")
 	//}()
 	//lock()
-	stringTest()
+	//stringTest()
+}
+
+// 返回多个值,并已经事先定义好了返回变量(默认值)
+func returnMulti(x, y int) (i int, v int) {
+	//i = x
+	//v = y
+	return
 }
 
 // 字符串常用
@@ -166,7 +174,7 @@ func concurrent(s string) {
 //异常
 func testError(num int) error {
 	if num < 0 {
-		return errors.New("参数不能为负数!")
+		return errors.New("参数不能为负数")
 	}
 	return nil
 }
@@ -248,6 +256,10 @@ func mapTest() {
 	// 删除元素
 	delete(test2Map, "name")
 	fmt.Println(test2Map)
+
+	test2Map["name"] = "Hello"
+	test2Map["address"] = "beijing"
+	fmt.Printf("%v", len(test2Map))
 }
 
 // 切片
@@ -386,8 +398,12 @@ func array() {
 		fmt.Println(str[i])
 	}
 
-	k := []int{1, 2, 3, 4}
+	// 这个是切片
+	k := []int{6, 3, 9, 10, 1, 2, 3, 4}
 	fmt.Println(k[0])
+	// 对数组进行排序
+	sort.Ints(k)
+	fmt.Println(k)
 }
 
 // 空指针

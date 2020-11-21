@@ -14,6 +14,17 @@ func main() {
 
 	throwException()
 	fmt.Println("game over")
+
+	i := 10
+	a := &i
+	fmt.Println(i)
+	fmt.Println(&i)
+	fmt.Println(a)
+	fmt.Println(*a)
+	fmt.Println(&a)
+	// 创建一个int类型的指针
+	var p = new(int)
+	fmt.Println(*p)
 }
 
 func addNum(x, y int, name string) int {
