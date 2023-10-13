@@ -11,7 +11,7 @@ func main() {
 	defer addNum(x, y, "two")
 	y = 20
 	defer addNum(x, y, "three")
-
+	// 这个三个defer 在main函数执行结束后会自下而上 挨个执行
 	throwException()
 	fmt.Println("game over")
 
@@ -33,14 +33,24 @@ func addNum(x, y int, name string) int {
 	return result
 }
 
+func handleException() {
+	// 接收异常
+	err := recover()
+	if err != nil {
+		fmt.Println("处理异常:", err)
+	}
+}
+
 func throwException() {
+	// defer handleException()
 	defer func() {
 		// 接收异常
 		err := recover()
 		if err != nil {
-			fmt.Println("处理异常:", err)
+			fmt.Println("处理异常1:", err)
 		}
 	}()
+
 	// 如果抛出的异常未处理则程序退出!
 	panic("throw 异常")
 }
