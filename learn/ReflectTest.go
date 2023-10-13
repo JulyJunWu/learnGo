@@ -86,3 +86,65 @@ func reflectStruct(x interface{}) {
 	// 执行结构体的方法
 	valueOf.MethodByName("Say").Call(nil)
 }
+
+func testReflect() {
+	var user1 User
+	user1.Name = "HaHa"
+	user1.Age = 60
+	user1.P1.Name = "HHHHH"
+	fmt.Println(user1)
+
+	typeOf := reflect.TypeOf(user1)
+	field := typeOf.NumField()
+	fmt.Println(field)
+	fmt.Println(typeOf.NumMethod())
+
+	structField := typeOf.Field(0)
+	fmt.Println("===========================================")
+	fmt.Println(structField.Name)
+	fmt.Println(structField.Type)
+	fmt.Println(structField.Index)
+	fmt.Println("===========================================")
+
+	valueOf := reflect.ValueOf(user1)
+	name := valueOf.FieldByName("Name")
+	fmt.Println(name)
+	fmt.Println(valueOf.Field(3))
+
+	// 反射执行无参函数
+	valueOf.MethodByName("Say").Call(nil)
+	// 反射执行有参函数
+	values := valueOf.MethodByName("Add").Call([]reflect.Value{reflect.ValueOf(int32(1))})
+	fmt.Println(values[0])
+
+	// 通过反射获取值
+	value := valueOf.FieldByName("Age").Int()
+	fmt.Println(value + 1)
+
+	// 通过反射 赋值
+	reflect.ValueOf(&user1).Elem().FieldByName("Age").SetInt(88)
+
+	fmt.Println(user1.Age)
+}
+
+type Person struct {
+	Name   string
+	Age    int32
+	Adress string
+}
+
+type User struct {
+	Name string
+	Age  int32
+	P1   Person
+	P2   Person
+	Person
+}
+
+func (u User) Say() {
+	fmt.Println(u.Name)
+}
+
+func (u User) Add(x int32) int32 {
+	return u.Age + x
+}
